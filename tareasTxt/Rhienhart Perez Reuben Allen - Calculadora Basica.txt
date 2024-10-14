@@ -21,10 +21,12 @@ msgResta db 'Resta $'
 msgMult db 'Multiplicacion $'
 msgDivi db 'Division $'
 msgSalir db ' Gracias por usar la aplicacion $'
+msgModulo db 'Modulo: $'
 msgResultado db 'El resultado es $'
 num1 db ?   
 unidades db ?
 decenas db ?
+residuo db ?
 resultado db ?
 
 .code
@@ -403,46 +405,52 @@ int 21h
 sub al, 30h
 mov bl, al
 
-; Hacer la division
-mov ax, 0
-mov al, num1
-div bl
-
-; Ajuste
-aam
-
-; Comprobar si las decenas estan en 0
-cmp ah, 0h
-je unidadesBloque
-
-; Si no, solo seguir su curso normal
-mov unidades, al
-mov decenas, ah
-
-add unidades, 30h
-add decenas, 30h
-
 ; Mover cursor
 mov ah, 02h
 mov dh, 3
-mov dl, 0
+mov dl, 5
 mov bh, 0 
 int 10h
 
-; Mostrar el mensaje de los resultados
+; Mostrar el mensaje del resultado
 mov ah, 09h
 lea dx, msgResultado
 int 21h
 
-; Mostrar el numero
-mov ah, 02h
-mov dl, decenas
-int 21h        
+; Hacer la division
+mov al, num1
+mov ah, 0
+div bl
+
+; Mostrar el resultado de la division
+mov unidades, bl
+add unidades, 30h
+
+mov residuo, bh
+add residuo, 30h
 
 mov ah, 02h
 mov dl, unidades
-int 21h 
-jmp menu 
+int 21h
+
+; Mover cursor
+mov ah, 02h
+mov dh, 4
+mov dl, 5
+mov bh, 0 
+int 10h
+
+; Mostrar el residuo de la division (modulo)
+mov ah, 09h
+lea dx, msgModulo
+int 21h
+
+; Mostrar el residuo
+mov ah, 02h
+mov dl, residuo
+int 21h
+
+jmp menu
 
 ;;;;;;;;;;;;
 ; Unidades ;
