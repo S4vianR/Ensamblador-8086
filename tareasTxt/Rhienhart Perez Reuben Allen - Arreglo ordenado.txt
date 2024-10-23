@@ -156,3 +156,11 @@ mov ah, 09h
 lea dx, msgExit
 int 21h
 ret
+
+; Main program flow
+start:
+call welcome       ; Call the welcome message
+call writeMsg      ; Call to write numbers to the array
+call bubbleSort    ; Call to sort the array
+call printSorted   ; Call to print the sorted array
+call exit          ; Call to exit the program
