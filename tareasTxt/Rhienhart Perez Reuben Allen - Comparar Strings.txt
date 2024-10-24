@@ -128,7 +128,3 @@ mov ah, 09h
 lea dx, msgSalir
 int 21h
 ret
-
-
-
-
